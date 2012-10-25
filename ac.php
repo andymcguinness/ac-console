@@ -15,9 +15,6 @@ if (!check_requirements()) {
   return FALSE;
 }
 
-$a = getopt("test");
-print_r($a);
-
 /**
  * Process commands
  */
@@ -42,8 +39,8 @@ if (isset($argv[1])) {
   print "Please specify a command!\n";
   print "Available commands:\n";
   $commands = available_commands();
-  foreach ($commands as $command => $help) {
-    print "- " . $command . " - " . $help . "\n";
+  foreach ($commands as $command) {
+    print "- " . $command['name'] . "\n    " . $command['description'] . "\n    Example: " . $command['example'] . "\n";
   }
 }
 
@@ -161,11 +158,16 @@ function get_tasks_for_project($project_id) {
 function available_commands() {
   return array(
     'user-tasks' => array(
+      'name' => 'user-tasks',
       'description' => 'Displays tasks for the authenticating user.',
       'example' => 'ac user-tasks',
     ),
     'task-info' => array(
-      'Displays information about a specific ticket. Information must be provided in the format {project_id}:{ticket_id}, without the braces.',
+      'name' => 'task-info',
+      'description' => "Displays information about a specific ticket.
+      Information must be provided in the format {project_id}:{ticket_id},
+      without the braces.",
+      'example' => 'ac task-info 150:233',
     ),
   );
 }
