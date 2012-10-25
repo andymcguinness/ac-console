@@ -18,6 +18,9 @@ if (!check_requirements()) {
 /**
  * Process commands
  */
+
+$commands = available_commands();
+
 if (isset($argv[1])) {
   switch ($argv[1]) {
   case 'user-tasks':
@@ -38,7 +41,6 @@ if (isset($argv[1])) {
 } else {
   print "Please specify a command!\n";
   print "Available commands:\n";
-  $commands = available_commands();
   foreach ($commands as $command) {
     print "- " . $command['name'] . "\n    " . $command['description'] . "\n    Example: " . $command['example'] . "\n";
   }
