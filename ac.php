@@ -15,6 +15,9 @@ if (!check_requirements()) {
   return FALSE;
 }
 
+$a = getopt("test");
+print_r($a);
+
 /**
  * Process commands
  */
@@ -163,5 +166,6 @@ function available_commands() {
     ),
     'task-info' => array(
       'Displays information about a specific ticket. Information must be provided in the format {project_id}:{ticket_id}, without the braces.',
+    ),
   );
 }
