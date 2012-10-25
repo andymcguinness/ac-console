@@ -31,9 +31,15 @@ if (isset($argv[1])) {
   case 'task-info':
       task_info(isset($argv[2]) ? $argv[2] : NULL);
     break;
+  default:
+    print "Command $argv[1] was not recognized!\n";
+    break;
   }
 } else {
-  print "Please specify a command\n";
+  print "Please specify a command!\n";
+  print "Available commands:\n";
+  print " - user-tasks\n";
+  print " - task-info\n";
 }
 
 
