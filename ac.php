@@ -60,6 +60,15 @@ function check_requirements()  {
     print "Could not parse config file.";
     return FALSE;
   }
+  if (!isset($file['ac_url']) || !$file['ac_url']) {
+    print "Please specify a value for ac_url in your config file!\n";
+  }
+  if (!isset($file['ac_token']) || !$file['ac_token']) {
+    print "Please specify a value for ac_token in your config file!\n";
+  }
+  if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
+    return FALSE;
+  }
   define("AC_URL", $file['ac_url']);
   define("AC_TOKEN", $file['ac_token']);
   define("PROJECTS", serialize($file['projects']));
