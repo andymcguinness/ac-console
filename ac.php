@@ -17,7 +17,7 @@ if (isset($argv[1])) {
   switch ($argv[1]) {
   case 'user-tasks':
     if (isset($argv[2])) {
-      $projects[$argv[2]] =$argv[2];
+      $projects[$argv[2]] = $argv[2];
       user_tasks($projects);
     } else {
       user_tasks();
@@ -56,9 +56,8 @@ function check_requirements()  {
  */
 function user_tasks($projects = array()) {
   if (!$projects) {
-      $projects = unserialize(PROJECTS);
+    $projects = unserialize(PROJECTS);
   }
-
   foreach ($projects as $project_id => $name) {
     $tasks = get_tasks_for_project($project_id);
     print "Tasks for Project #$project_id - $name\n";
