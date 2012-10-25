@@ -13,4 +13,12 @@ Type `ac` to see a list of available commands.
 
 ## Configuration
 
-Create a file in your home directory:
+Your `~/.active_collab` file contains information for connecting with AC.
+
+The file should look something like:
+
+    ac_url = https://{site_url}/api.php
+    ac_token = {token}
+    projects[10] = Project I care about
+    projects[25] = Another project
+
