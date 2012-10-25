@@ -22,3 +22,4 @@ The file should look something like:
     projects[10] = Project I care about
     projects[25] = Another project
 
+Obtain your `ac_token` by logging into activeCollab and navigating to Profile > API Settings.
