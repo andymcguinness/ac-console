@@ -1,6 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * @file
+ *   Provides command line options for interacting with activeCollab API.
+ */
+
 define("CURRENT_USER",  get_current_user());
 
 /**
