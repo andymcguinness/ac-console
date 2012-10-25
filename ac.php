@@ -23,8 +23,8 @@ if (isset($argv[1])) {
       user_tasks();
     }
     break;
-  case 'ticket-detail':
-      ticket_detail(isset($argv[2]) ? $argv[2] : NULL);
+  case 'task-info':
+      task_info(isset($argv[2]) ? $argv[2] : NULL);
     break;
   }
 } else {
@@ -78,7 +78,7 @@ function user_tasks($projects = array()) {
 /**
  * Displays information about a ticket.
  */
-function ticket_detail($project_ticket = NULL) {
+function task_info($project_ticket = NULL) {
   if (!$project_ticket) {
     print "Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}\n";
     return FALSE;
@@ -98,8 +98,9 @@ function ticket_detail($project_ticket = NULL) {
     print "Ticket Name: " . $data->name . "\n";
     print "Created on: " . $data->created_on . "\n";
     print "URL: " . $data->permalink . "\n";
+    print "Body: " . strip_tags($data->body) . "\n";
     isset($data->due_on) ? print "Due on: " . $data->due_on . "\n" : NULL;
-    if (isset($data->tasks)) {
+    if (isset($data->tasks) && $data->tasks) {
       print "Tasks:\n";
       foreach ($data->tasks as $task) {
         if ($task->completed_on) {
