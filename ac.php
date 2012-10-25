@@ -38,8 +38,10 @@ if (isset($argv[1])) {
 } else {
   print "Please specify a command!\n";
   print "Available commands:\n";
-  print " - user-tasks\n";
-  print " - task-info\n";
+  $commands = available_commands();
+  foreach ($commands as $command => $help) {
+    print "- " . $command . " - " . $help . "\n";
+  }
 }
 
 
@@ -153,3 +155,13 @@ function get_tasks_for_project($project_id) {
     return $tasks;
 }
 
+function available_commands() {
+  return array(
+    'user-tasks' => array(
+      'description' => 'Displays tasks for the authenticating user.',
+      'example' => 'ac user-tasks',
+    ),
+    'task-info' => array(
+      'Displays information about a specific ticket. Information must be provided in the format {project_id}:{ticket_id}, without the braces.',
+  );
+}
