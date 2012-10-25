@@ -162,6 +162,9 @@ function get_tasks_for_project($project_id) {
       if ($task->type == 'Ticket') {
         $tasks[$task->ticket_id] = $task->name;
       }
+      else if ($task->type == 'Task') {
+        $tasks[$task->id] = 'Task: ' . $task->name;
+      }
     }
     return $tasks;
 }
