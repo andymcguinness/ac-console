@@ -8,12 +8,112 @@
 
 define("CURRENT_USER",  get_current_user());
 
-/**
- * Setup
- */
 if (!check_requirements()) {
   return FALSE;
 }
+
+require_once('vendor/autoload.php');
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+$console = new Application();
+
+$console
+  ->register('user-tasks')
+  ->setDefinition(array(
+      new InputArgument('project', InputArgument::OPTIONAL, 'Tasks for a specific project', NULL),
+    ))
+  ->setDescription('List tasks for the authenticating user.')
+  ->setHelp('
+The <info>user-tasks</info> command will display a list of tasks for the current user.
+
+<comment>Samples:</comment>
+  To run with default options:
+    <info>php ac.php user-tasks</info>
+  To list tasks for a specific project
+    <info>php ac.php user-tasks 150</info>
+')
+  ->setCode(function (InputInterface $input, OutputInterface $output) {
+    $projects = $input->getArgument('project');
+    if (!$projects) {
+      $projects = unserialize(PROJECTS);
+    }
+    foreach ($projects as $project_id => $name) {
+      $tasks = get_tasks_for_project($project_id);
+      $output->writeln("<info>Tasks for Project #$project_id - $name</info>");
+      $output->writeln("<info>===========================================</info>");
+      if ($tasks) {
+        foreach ($tasks as $task_id => $task_name) {
+          $output->writeln('<comment>#' . $task_id . ': ' . $task_name . '</comment>');
+        }
+      }
+      else {
+        $output->writeln("No tasks found!");
+      }
+    }
+    });
+
+$console
+  ->register('task-info')
+  ->setDefinition(array(
+      new InputArgument('task', InputArgument::REQUIRED, 'Project ID and Ticket ID', NULL),
+    ))
+  ->setDescription('Display information about a specific ticket.')
+  ->setHelp('
+The <info>task-info</info> command displays information about a specific ticket. Information must be provided in the format <comment>project_id:ticket_id</comment>.
+
+<comment>Samples:</comment>
+  To display ticket information for ticket 233 in project 150
+    <info>php ac.php task-info 150:233</info>
+')
+  ->setCode(function (InputInterface $input, OutputInterface $output) {
+    $project_ticket = $input->getArgument('task');
+    if (!$project_ticket) {
+      $output->writeln("<error>Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}</error>");
+      return FALSE;
+    }
+    $project_id = substr($project_ticket, 0, strpos($project_ticket, ':'));
+    $ticket_id = substr($project_ticket, strpos($project_ticket, ':') + 1);
+    $ch = curl_init();
+    $url = AC_URL . '?token=' . AC_TOKEN . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+    curl_close($ch);
+    $info = array();
+    if (!is_array($data)) {
+      $output->writeln("<info>Project ID:</info> " . $data->project_id);
+      $output->writeln("<info>Ticket Name:</info> " . $data->name);
+      $output->writeln("<info>Created on:</info> " . $data->created_on);
+      $output->writeln("<info>URL:</info> " . $data->permalink);
+      $output->writeln("<info>Body: </info>" . trim(strip_tags($data->body), 200));
+      isset($data->due_on) ? $output->writeln("<info>Due on:</info> " . $data->due_on) : NULL;
+      if (isset($data->tasks) && $data->tasks) {
+        $output->writeln("<info>Tasks:</info>");
+        foreach ($data->tasks as $task) {
+          if ($task->completed_on) {
+            $output->writeln("<info>[DONE]</info> " . $task->body);
+          } else {
+            $text = "<comment>[PENDING]</comment> " . $task->body;
+            if ($task->due_on && !$task->completed_on) {
+              $text .= "<comment> [" . $task->due_on . "]</comment>";
+            }
+            $output->writeln($text);
+          }
+
+        }
+      }
+      return;
+    }
+
+
+    });
+
+$console->run();
 
 /**
  * Process commands
