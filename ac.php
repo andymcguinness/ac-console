@@ -115,37 +115,6 @@ The <info>task-info</info> command displays information about a specific ticket.
 
 $console->run();
 
-/**
- * Process commands
- */
-
-$commands = available_commands();
-
-if (isset($argv[1])) {
-  switch ($argv[1]) {
-  case 'user-tasks':
-    if (isset($argv[2])) {
-      $projects[$argv[2]] = $argv[2];
-      user_tasks($projects);
-    } else {
-      user_tasks();
-    }
-    break;
-  case 'task-info':
-      task_info(isset($argv[2]) ? $argv[2] : NULL);
-    break;
-  default:
-    print "Command $argv[1] was not recognized!\n";
-    break;
-  }
-} else {
-  print "Please specify a command!\n";
-  print "Available commands:\n";
-  foreach ($commands as $command) {
-    print "- " . $command['name'] . "\n    " . $command['description'] . "\n    Example: " . $command['example'] . "\n";
-  }
-}
-
 
 /**
  * Check to see if config file is present.
@@ -208,13 +177,7 @@ function task_info($project_ticket = NULL) {
   }
   $project_id = substr($project_ticket, 0, strpos($project_ticket, ':'));
   $ticket_id = substr($project_ticket, strpos($project_ticket, ':') + 1);
-  $ch = curl_init();
-  $url = AC_URL . '?token=' . AC_TOKEN . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  $response = curl_exec($ch);
-  $data = json_decode($response);
-  curl_close($ch);
+  $data = get_task_info($project_id, $ticket_id);
   $info = array();
   if (!is_array($data)) {
     print "Project ID: " . $data->project_id . "\n";
@@ -242,6 +205,16 @@ function task_info($project_ticket = NULL) {
   }
 }
 
+function get_task_info($project_id, $ticket_id) {
+  $ch = curl_init();
+  $url = AC_URL . '?token=' . AC_TOKEN . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  $response = curl_exec($ch);
+  $data = json_decode($response);
+  curl_close($ch);
+  return $data;
+}
 
 /**
  * Get user tasks for a given project.
@@ -269,19 +242,3 @@ function get_tasks_for_project($project_id) {
     return $tasks;
 }
 
-function available_commands() {
-  return array(
-    'user-tasks' => array(
-      'name' => 'user-tasks',
-      'description' => 'Displays tasks for the authenticating user.',
-      'example' => 'ac user-tasks',
-    ),
-    'task-info' => array(
-      'name' => 'task-info',
-      'description' => "Displays information about a specific ticket.
-      Information must be provided in the format {project_id}:{ticket_id},
-      without the braces.",
-      'example' => 'ac task-info 150:233',
-    ),
-  );
-}
