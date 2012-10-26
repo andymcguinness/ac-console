@@ -23,9 +23,13 @@ $console = new Application();
 
 $console
   ->register('user-tasks')
-  ->setDefinition(array(
-      new InputArgument('project', InputArgument::OPTIONAL, 'Tasks for a specific project', NULL),
-    ))
+  ->addOption(
+        'project',
+        null,
+        InputOption::VALUE_OPTIONAL,
+        'Specify the project to load tasks for',
+        null
+    )
   ->setDescription('List tasks for the authenticating user.')
   ->setHelp('
 The <info>user-tasks</info> command will display a list of tasks for the current user.
@@ -37,9 +41,15 @@ The <info>user-tasks</info> command will display a list of tasks for the current
     <info>php ac.php user-tasks 150</info>
 ')
   ->setCode(function (InputInterface $input, OutputInterface $output) {
-    $projects = $input->getArgument('project');
+    $projects = $input->getOption('project');
     if (!$projects) {
       $projects = unserialize(PROJECTS);
+      if (!is_array($projects)) {
+        $output->writeln("<error>Could not load any projects to query.</error>");
+        return FALSE;
+      }
+    } else {
+      // @todo
     }
     foreach ($projects as $project_id => $name) {
       $tasks = get_tasks_for_project($project_id);
