@@ -11,6 +11,12 @@ then
     echo "projects[]" >> ~/.active_collab
 fi
 
+if [ ! -f composer.phar ];
+then
+    curl http://getcomposer.org/installer | php
+    php composer.phar install
+fi
+
 cp ac.php /usr/local/bin/ac
 chmod +x /usr/local/bin/ac
 
