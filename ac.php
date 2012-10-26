@@ -120,6 +120,10 @@ $console->run();
  * Check to see if config file is present.
  */
 function check_requirements()  {
+  if (!file_exists('vendor/autoload.php')) {
+    print "Please run the install.sh script.\n";
+    return FALSE;
+  }
   if (!file_exists('/Users/' . CURRENT_USER . '/.active_collab')) {
     print "Please create a ~/.active_collab file.\n";
     return FALSE;
