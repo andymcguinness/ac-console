@@ -8,9 +8,8 @@
 
 define("CURRENT_USER",  get_current_user());
 
-if (!check_requirements()) {
-  return FALSE;
-}
+// Check to see if requirements are met before proceeding.
+$ac_cli = new activeCollabCli();
 
 require_once('vendor/autoload.php');
 use Symfony\Component\Console\Application;
@@ -42,8 +41,9 @@ The <info>user-tasks</info> command will display a list of tasks for the current
 ')
   ->setCode(function (InputInterface $input, OutputInterface $output) {
     $projects = $input->getOption('project');
+    $ac_cli = new activeCollabCli();
     if (!$projects) {
-      $projects = unserialize(PROJECTS);
+      $projects = unserialize($ac_cli->projects);
       if (!is_array($projects)) {
         $output->writeln("<error>Could not load any projects to query.</error>");
         return FALSE;
@@ -52,7 +52,8 @@ The <info>user-tasks</info> command will display a list of tasks for the current
       // @todo
     }
     foreach ($projects as $project_id => $name) {
-      $tasks = get_tasks_for_project($project_id);
+      $tasks = $ac_cli->getTasksForProject($project_id);
+      $output->writeln("<info>===========================================</info>");
       $output->writeln("<info>Tasks for Project #$project_id - $name</info>");
       $output->writeln("<info>===========================================</info>");
       if ($tasks) {
@@ -87,13 +88,9 @@ The <info>task-info</info> command displays information about a specific ticket.
     }
     $project_id = substr($project_ticket, 0, strpos($project_ticket, ':'));
     $ticket_id = substr($project_ticket, strpos($project_ticket, ':') + 1);
-    $ch = curl_init();
-    $url = AC_URL . '?token=' . AC_TOKEN . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($ch);
-    $data = json_decode($response);
-    curl_close($ch);
+    $ac_cli = new activeCollabCli();
+    $data = $ac_cli->getTaskInfo($project_id, $ticket_id);
+
     $info = array();
     if (!is_array($data)) {
       $output->writeln("<info>Project ID:</info> " . $data->project_id);
@@ -125,117 +122,77 @@ The <info>task-info</info> command displays information about a specific ticket.
 
 $console->run();
 
-
 /**
- * Check to see if config file is present.
- */
-function check_requirements()  {
-  if (!file_exists('vendor/autoload.php')) {
-    print "Please run the install.sh script.\n";
-    return FALSE;
-  }
-  if (!file_exists('/Users/' . CURRENT_USER . '/.active_collab')) {
-    print "Please create a ~/.active_collab file.\n";
-    return FALSE;
-  }
-  $file = parse_ini_file('/Users/' . CURRENT_USER . '/.active_collab');
-  if (!is_array($file)) {
-    print "Could not parse config file.";
-    return FALSE;
-  }
-  if (!isset($file['ac_url']) || !$file['ac_url']) {
-    print "Please specify a value for ac_url in your config file!\n";
-  }
-  if (!isset($file['ac_token']) || !$file['ac_token']) {
-    print "Please specify a value for ac_token in your config file!\n";
-  }
-  if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
-    return FALSE;
-  }
-  define("AC_URL", $file['ac_url']);
-  define("AC_TOKEN", $file['ac_token']);
-  define("PROJECTS", serialize($file['projects']));
-  return TRUE;
-}
+* Ability to authorize and communicate with the activeCollab 2.x API.
+*/
+class activeCollabCli
+{
 
-/**
- * Display all user tasks for defined projects.
- */
-function user_tasks($projects = array()) {
-  if (!$projects) {
-    $projects = unserialize(PROJECTS);
-  }
-  foreach ($projects as $project_id => $name) {
-    $tasks = get_tasks_for_project($project_id);
-    print "Tasks for Project #$project_id - $name\n";
-    print "===========================================\n";
-    if ($tasks) {
-      foreach ($tasks as $task_id => $task_name) {
-        print '#' . $task_id . ': ' . $task_name . "\n";
-      }
-      print "\n";
+  /**
+   * Constructor
+   */
+  function __construct()
+  {
+    if (!$this->checkRequirements()) {
+      return FALSE;
     }
-    else {
-      print "No tasks found!\n\n";
+    $config = parse_ini_file('/Users/' . CURRENT_USER . '/.active_collab');
+    $this->ac_url = $config['ac_url'];
+    $this->ac_token = $config['ac_token'];
+    $this->projects = serialize($config['projects']);
+  }
+
+  /**
+   * Check to see if config file is present and for other requirements.
+   */
+  public function checkRequirements()
+  {
+    if (!file_exists('vendor/autoload.php')) {
+      print "Please run the install.sh script.\n";
+      return FALSE;
     }
-  }
-}
-
-/**
- * Displays information about a ticket.
- */
-function task_info($project_ticket = NULL) {
-  if (!$project_ticket) {
-    print "Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}\n";
-    return FALSE;
-  }
-  $project_id = substr($project_ticket, 0, strpos($project_ticket, ':'));
-  $ticket_id = substr($project_ticket, strpos($project_ticket, ':') + 1);
-  $data = get_task_info($project_id, $ticket_id);
-  $info = array();
-  if (!is_array($data)) {
-    print "Project ID: " . $data->project_id . "\n";
-    print "Ticket Name: " . $data->name . "\n";
-    print "Created on: " . $data->created_on . "\n";
-    print "URL: " . $data->permalink . "\n";
-    print "Body: " . strip_tags($data->body) . "\n";
-    isset($data->due_on) ? print "Due on: " . $data->due_on . "\n" : NULL;
-    if (isset($data->tasks) && $data->tasks) {
-      print "Tasks:\n";
-      foreach ($data->tasks as $task) {
-        if ($task->completed_on) {
-          print "- [DONE] ";
-        } else {
-          print "- [PENDING] ";
-        }
-        print $task->body;
-        if ($task->due_on && !$task->completed_on) {
-          print " [" . $task->due_on . "]";
-        }
-        print "\n";
-      }
+    if (!file_exists('/Users/' . CURRENT_USER . '/.active_collab')) {
+      print "Please create a ~/.active_collab file.\n";
+      return FALSE;
     }
-    return;
+    $file = parse_ini_file('/Users/' . CURRENT_USER . '/.active_collab');
+    if (!is_array($file)) {
+      print "Could not parse config file.";
+      return FALSE;
+    }
+    if (!isset($file['ac_url']) || !$file['ac_url']) {
+      print "Please specify a value for ac_url in your config file!\n";
+    }
+    if (!isset($file['ac_token']) || !$file['ac_token']) {
+      print "Please specify a value for ac_token in your config file!\n";
+    }
+    if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
+      return FALSE;
+    }
+    return TRUE;
   }
-}
 
-function get_task_info($project_id, $ticket_id) {
-  $ch = curl_init();
-  $url = AC_URL . '?token=' . AC_TOKEN . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  $response = curl_exec($ch);
-  $data = json_decode($response);
-  curl_close($ch);
-  return $data;
-}
-
-/**
- * Get user tasks for a given project.
- */
-function get_tasks_for_project($project_id) {
+  /**
+   * Displays information about a ticket.
+   */
+  public function getTaskInfo($project_id, $ticket_id) {
     $ch = curl_init();
-    $url = AC_URL . '?token=' . AC_TOKEN . '&path_info=/projects/' . $project_id . '/user-tasks&format=json';
+    $url = $this->ac_url . '?token=' . $this->ac_token . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+    curl_close($ch);
+    return $data;
+  }
+
+  /**
+   * Get user tasks for a given project.
+   */
+  public function getTasksForProject($project_id)
+  {
+    $ch = curl_init();
+    $url = $this->ac_url . '?token=' . $this->ac_token . '&path_info=/projects/' . $project_id . '/user-tasks&format=json';
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $response = curl_exec($ch);
@@ -254,5 +211,5 @@ function get_tasks_for_project($project_id) {
       }
     }
     return $tasks;
+  }
 }
-
