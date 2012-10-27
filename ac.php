@@ -25,7 +25,7 @@ $console
   ->addOption(
         'project',
         null,
-        InputOption::VALUE_OPTIONAL,
+        InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
         'Specify the project to load tasks for',
         null
     )
@@ -40,30 +40,37 @@ The <info>user-tasks</info> command will display a list of tasks for the current
     <info>php ac.php user-tasks 150</info>
 ')
   ->setCode(function (InputInterface $input, OutputInterface $output) {
-    $projects = $input->getOption('project');
     $ac_cli = new activeCollabCli();
-    if (!$projects) {
+    if ($projects = $input->getOption('project')) {
+      $projects = array_flip($projects);
+    }
+    else {
       $projects = unserialize($ac_cli->projects);
       if (!is_array($projects)) {
         $output->writeln("<error>Could not load any projects to query.</error>");
         return FALSE;
       }
-    } else {
-      // @todo
     }
+
     foreach ($projects as $project_id => $name) {
-      $tasks = $ac_cli->getTasksForProject($project_id);
-      $output->writeln("<info>===========================================</info>");
-      $output->writeln("<info>Tasks for Project #$project_id - $name</info>");
-      $output->writeln("<info>===========================================</info>");
-      if ($tasks) {
-        foreach ($tasks as $task_id => $task_name) {
-          $output->writeln('<comment>#' . $task_id . ': ' . $task_name . '</comment>');
+      if ($tasks = $ac_cli->getTasksForProject($project_id)) {
+        $output->writeln("<info>===========================================</info>");
+        $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;
+        $output->writeln("<info>Tasks for Project #$project_header</info>");
+        $output->writeln("<info>===========================================</info>");
+        if ($tasks) {
+          foreach ($tasks as $task_id => $task_name) {
+            $output->writeln('<comment>#' . $task_id . ': ' . $task_name . '</comment>');
+          }
+        }
+        else {
+          $output->writeln("No tasks found!");
         }
       }
       else {
-        $output->writeln("No tasks found!");
+        $output->writeln("<error>Could not load any tasks for project #$project_id</error>");
       }
+
     }
     });
 
@@ -191,6 +198,9 @@ class activeCollabCli
    */
   public function getTasksForProject($project_id)
   {
+    if (!is_numeric($project_id)) {
+      return FALSE;
+    }
     $ch = curl_init();
     $url = $this->ac_url . '?token=' . $this->ac_token . '&path_info=/projects/' . $project_id . '/user-tasks&format=json';
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -200,7 +210,7 @@ class activeCollabCli
     curl_close($ch);
     $tasks = array();
     if (!is_array($data)) {
-      return;
+      return FALSE;
     }
     foreach ($data as $task) {
       if ($task->type == 'Ticket') {
