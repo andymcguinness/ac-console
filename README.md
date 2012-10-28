@@ -5,11 +5,14 @@ A command-line interface for activeCollab 2.x.
 
 ## Installation
 
-Run `./install.sh`
+1. Clone this repo.
+2. `cd /path/to/ac_cli`
+3. `curl http://getcomposer.org/installer | php`
+4. `php composer.phar install`
 
 ## Usage
 
-Type `ac` to see a list of available commands.
+Type "php ac.php" to see a list of commands.
 
 ## Configuration
 
