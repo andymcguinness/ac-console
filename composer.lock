@@ -1,0 +1,82 @@
+{
+    "hash": "1fe5fbea42fbf447f8196ac06b6b36b4",
+    "packages": [
+        {
+            "name": "kostajh/activeCollabAPI",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kostajh/activeCollabAPI",
+                "reference": "788769d1f0afd5dd3637a73f0b2a9220af1be8f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/kostajh/activeCollabAPI/zipball/788769d1f0afd5dd3637a73f0b2a9220af1be8f2",
+                "reference": "788769d1f0afd5dd3637a73f0b2a9220af1be8f2",
+                "shasum": ""
+            },
+            "time": "1351459596",
+            "type": "library",
+            "installation-source": "source",
+            "support": {
+                "source": "https://github.com/kostajh/activeCollabAPI/tree/master",
+                "issues": "https://github.com/kostajh/activeCollabAPI/issues"
+            }
+        },
+        {
+            "name": "symfony/console",
+            "version": "v2.1.2",
+            "target-dir": "Symfony/Component/Console",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Console",
+                "reference": "v2.1.0-RC2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Console/zipball/v2.1.0-RC2",
+                "reference": "v2.1.0-RC2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "time": "2012-08-22 06:48:41",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Console": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Console Component",
+            "homepage": "http://symfony.com"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "kostajh/activecollabapi": 20
+    }
+}
