@@ -8,6 +8,8 @@
 
 define("CURRENT_USER",  get_current_user());
 
+require_once('vendor/kostajh/activeCollabAPI/src/activeCollabAPI.php');
+
 // Check to see if requirements are met before proceeding.
 $ac_cli = new activeCollabCli();
 
@@ -17,6 +19,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+
+$ac = new ActiveCollab();
+$ac->setAPIUrl($ac_cli->ac_url);
+$ac->setKey($ac_cli->ac_token);
 
 $console = new Application();
 
@@ -53,14 +59,16 @@ The <info>user-tasks</info> command will display a list of tasks for the current
     }
 
     foreach ($projects as $project_id => $name) {
-      if ($tasks = $ac_cli->getTasksForProject($project_id)) {
+      $ac = new ActiveCollabProject($project_id);
+
+      if ($tasks = $ac->getUserTasks($project_id)) {
         $output->writeln("<info>===========================================</info>");
         $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;
         $output->writeln("<info>Tasks for Project #$project_header</info>");
         $output->writeln("<info>===========================================</info>");
         if ($tasks) {
-          foreach ($tasks as $task_id => $task_name) {
-            $output->writeln('<comment>#' . $task_id . ': ' . $task_name . '</comment>');
+          foreach ($tasks as $task) {
+            $output->writeln('<comment>#' . $task->id . ': ' . $task->name . '</comment>');
           }
         }
         else {

@@ -7,6 +7,6 @@
   ],
   "require": {
       "symfony/console": "2.*",
-      "kostajh/activeCollabAPI": "dev-master"
+      "kostajh/activeCollabAPI": "dev-json"
   }
 }

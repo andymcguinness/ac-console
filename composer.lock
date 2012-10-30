@@ -1,21 +1,21 @@
 {
-    "hash": "1fe5fbea42fbf447f8196ac06b6b36b4",
+    "hash": "24988e9bb49c51e983b0689f0be10316",
     "packages": [
         {
             "name": "kostajh/activeCollabAPI",
-            "version": "dev-master",
+            "version": "dev-json",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kostajh/activeCollabAPI",
-                "reference": "f23cd28df4531d0b18f5eac0c34912357007a052"
+                "reference": "12945fb20b5c02355a3eff854d77fb174675bf7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kostajh/activeCollabAPI/zipball/f23cd28df4531d0b18f5eac0c34912357007a052",
-                "reference": "f23cd28df4531d0b18f5eac0c34912357007a052",
+                "url": "https://github.com/kostajh/activeCollabAPI/zipball/12945fb20b5c02355a3eff854d77fb174675bf7b",
+                "reference": "12945fb20b5c02355a3eff854d77fb174675bf7b",
                 "shasum": ""
             },
-            "time": "1351461416",
+            "time": "1351562219",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -24,7 +24,7 @@
                 }
             },
             "support": {
-                "source": "https://github.com/kostajh/activeCollabAPI/tree/master",
+                "source": "https://github.com/kostajh/activeCollabAPI/tree/json",
                 "issues": "https://github.com/kostajh/activeCollabAPI/issues"
             }
         },
