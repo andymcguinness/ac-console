@@ -8,7 +8,7 @@
 
 define("CURRENT_USER",  get_current_user());
 
-require_once('vendor/kostajh/activeCollabAPI/src/activeCollabAPI.php');
+require_once('vendor/kostajh/activeCollabAPI/src/activeCollabAPI/activeCollabAPI.php');
 
 // Check to see if requirements are met before proceeding.
 $ac_cli = new activeCollabCli();
