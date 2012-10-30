@@ -68,7 +68,7 @@ The <info>user-tasks</info> command will display a list of tasks for the current
         $output->writeln("<info>===========================================</info>");
         if ($tasks) {
           foreach ($tasks as $task) {
-            $output->writeln('<comment>#' . $task->id . ': ' . $task->name . '</comment>');
+            $output->writeln('<comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
           }
         }
         else {
