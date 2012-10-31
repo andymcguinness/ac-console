@@ -6,10 +6,12 @@
  *   Provides command line options for interacting with activeCollab API.
  */
 
+namespace kostajh\ActiveCollabCli;
+
 define("CURRENT_USER",  get_current_user());
 
 // Check to see if requirements are met before proceeding.
-$ac_cli = new activeCollabCli();
+$ac_cli = new ActiveCollabCli();
 
 require_once 'vendor/autoload.php';
 use Symfony\Component\Console\Application;
@@ -142,7 +144,7 @@ $console->run();
 /**
 * Ability to authorize and communicate with the activeCollab 2.x API.
 */
-class activeCollabCli
+class ActiveCollabCli
 {
 
   /**
