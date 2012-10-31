@@ -1,26 +1,26 @@
 {
-    "hash": "24988e9bb49c51e983b0689f0be10316",
+    "hash": "7d477608547fc2ebab7502ebc6d8d38a",
     "packages": [
         {
             "name": "kostajh/activeCollabAPI",
-            "version": "dev-json",
+            "version": "dev-rewrite",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kostajh/activeCollabAPI",
-                "reference": "d048ed3aa4a8964144b57d80549d5c870f13570a"
+                "url": "https://github.com/kostajh/ActiveCollabApi",
+                "reference": "e58d7e6c863139aea610efb373db4285404a1b52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kostajh/activeCollabAPI/zipball/d048ed3aa4a8964144b57d80549d5c870f13570a",
-                "reference": "d048ed3aa4a8964144b57d80549d5c870f13570a",
+                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/e58d7e6c863139aea610efb373db4285404a1b52",
+                "reference": "e58d7e6c863139aea610efb373db4285404a1b52",
                 "shasum": ""
             },
-            "time": "1351605331",
+            "time": "1351699413",
             "type": "library",
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
-                    "activeCollabAPI": "src"
+                    "ActiveCollabApi": "src"
                 }
             },
             "license": [
@@ -35,13 +35,13 @@
                 }
             ],
             "description": "PHP wrappers for interacting with activeCollab API.",
-            "homepage": "http://github.com/kostajh/activeCollabAPI",
+            "homepage": "http://github.com/kostajh/ActiveCollabApi",
             "keywords": [
                 "activeCollab"
             ],
             "support": {
-                "source": "https://github.com/kostajh/activeCollabAPI/tree/json",
-                "issues": "https://github.com/kostajh/activeCollabAPI/issues"
+                "source": "https://github.com/kostajh/ActiveCollabApi/tree/rewrite",
+                "issues": "https://github.com/kostajh/ActiveCollabApi/issues"
             }
         },
         {

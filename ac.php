@@ -8,8 +8,6 @@
 
 define("CURRENT_USER",  get_current_user());
 
-require_once('vendor/kostajh/activeCollabAPI/src/activeCollabAPI/activeCollabAPI.php');
-
 // Check to see if requirements are met before proceeding.
 $ac_cli = new activeCollabCli();
 
@@ -19,8 +17,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use ActiveCollabApi\ActiveCollabApi;
 
-$ac = new ActiveCollab();
+$ac = new ActiveCollabApi();
 $ac->setAPIUrl($ac_cli->ac_url);
 $ac->setKey($ac_cli->ac_token);
 
