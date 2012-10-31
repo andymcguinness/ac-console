@@ -2,11 +2,11 @@
   "repositories": [
     {
         "type": "vcs",
-        "url": "https://github.com/kostajh/activeCollabAPI"
+        "url": "https://github.com/kostajh/ActiveCollabApi"
     }
   ],
   "require": {
       "symfony/console": "2.*",
-      "kostajh/activeCollabAPI": "dev-json"
+      "kostajh/ActiveCollabApi": "dev-rewrite"
   }
 }
