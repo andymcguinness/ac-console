@@ -11,7 +11,7 @@ define("CURRENT_USER",  get_current_user());
 // Check to see if requirements are met before proceeding.
 $ac_cli = new activeCollabCli();
 
-require_once('vendor/autoload.php');
+require_once 'vendor/autoload.php';
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,64 +26,62 @@ $ac->setKey($ac_cli->ac_token);
 $console = new Application();
 
 $console
-  ->register('user-tasks')
-  ->addOption(
+    ->register('user-tasks')
+    ->addOption(
         'project',
         null,
         InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
         'Specify the project to load tasks for',
         null
     )
-  ->setDescription('List tasks for the authenticating user.')
-  ->setHelp('
-The <info>user-tasks</info> command will display a list of tasks for the current user.
+    ->setDescription('List tasks for the authenticating user.')
+    ->setHelp(
+        'The <info>user-tasks</info> command will display a list of tasks for the current user.
 
-<comment>Samples:</comment>
-  To run with default options:
-    <info>php ac.php user-tasks</info>
-  To list tasks for a specific project
-    <info>php ac.php user-tasks 150</info>
-')
-  ->setCode(function (InputInterface $input, OutputInterface $output) {
-    $ac_cli = new activeCollabCli();
-    if ($projects = $input->getOption('project')) {
-      $projects = array_flip($projects);
-    }
-    else {
-      $projects = unserialize($ac_cli->projects);
-      if (!is_array($projects)) {
-        $output->writeln("<error>Could not load any projects to query.</error>");
-        return FALSE;
+  <comment>Samples:</comment>
+    To run with default options:
+      <info>php ac.php user-tasks</info>
+    To list tasks for a specific project
+      <info>php ac.php user-tasks 150</info>'
+    )
+    ->setCode(function (InputInterface $input, OutputInterface $output) {
+      $ac_cli = new activeCollabCli();
+      if ($projects = $input->getOption('project')) {
+          $projects = array_flip($projects);
+      } else {
+        $projects = unserialize($ac_cli->projects);
+        if (!is_array($projects)) {
+          $output->writeln("<error>Could not load any projects to query.</error>");
+
+          return FALSE;
+        }
       }
-    }
 
-    foreach ($projects as $project_id => $name) {
-      $ac = new ActiveCollabProject($project_id);
+      foreach ($projects as $project_id => $name) {
+        $ac = new ActiveCollabProject($project_id);
 
-      if ($tasks = $ac->getUserTasks($project_id)) {
-        $output->writeln("<info>===========================================</info>");
-        $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;
-        $output->writeln("<info>Tasks for Project #$project_header</info>");
-        $output->writeln("<info>===========================================</info>");
-        if ($tasks) {
-          foreach ($tasks as $task) {
-            if ($task->type == 'Ticket') {
-              $output->writeln('<comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
-            } else {
-              // @todo Display tasks
+        if ($tasks = $ac->getUserTasks($project_id)) {
+          $output->writeln("<info>===========================================</info>");
+          $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;
+          $output->writeln("<info>Tasks for Project #$project_header</info>");
+          $output->writeln("<info>===========================================</info>");
+          if ($tasks) {
+            foreach ($tasks as $task) {
+              if ($task->type == 'Ticket') {
+                $output->writeln('<comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
+              } else {
+                // @todo Display tasks
+              }
             }
+          } else {
+            $output->writeln("No tasks found!");
           }
+        } else {
+          $output->writeln("<error>Could not load any tasks for project #$project_id</error>");
         }
-        else {
-          $output->writeln("No tasks found!");
-        }
-      }
-      else {
-        $output->writeln("<error>Could not load any tasks for project #$project_id</error>");
-      }
 
-    }
-    });
+      }
+      });
 
 $console
   ->register('task-info')
@@ -102,6 +100,7 @@ The <info>task-info</info> command displays information about a specific ticket.
     $project_ticket = $input->getArgument('task');
     if (!$project_ticket) {
       $output->writeln("<error>Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}</error>");
+
       return FALSE;
     }
     $project_id = substr($project_ticket, 0, strpos($project_ticket, ':'));
@@ -132,9 +131,9 @@ The <info>task-info</info> command displays information about a specific ticket.
 
         }
       }
+
       return;
     }
-
 
     });
 
@@ -149,7 +148,7 @@ class activeCollabCli
   /**
    * Constructor
    */
-  function __construct()
+  public function __construct()
   {
     if (!$this->checkRequirements()) {
       return FALSE;
@@ -167,15 +166,18 @@ class activeCollabCli
   {
     if (!file_exists('vendor/autoload.php')) {
       print "Please run the install.sh script.\n";
+
       return FALSE;
     }
     if (!file_exists('/Users/' . CURRENT_USER . '/.active_collab')) {
       print "Please create a ~/.active_collab file.\n";
+
       return FALSE;
     }
     $file = parse_ini_file('/Users/' . CURRENT_USER . '/.active_collab');
     if (!is_array($file)) {
       print "Could not parse config file.";
+
       return FALSE;
     }
     if (!isset($file['ac_url']) || !$file['ac_url']) {
@@ -187,13 +189,15 @@ class activeCollabCli
     if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
       return FALSE;
     }
+
     return TRUE;
   }
 
   /**
    * Displays information about a ticket.
    */
-  public function getTaskInfo($project_id, $ticket_id) {
+  public function getTaskInfo($project_id, $ticket_id)
+  {
     $ch = curl_init();
     $url = $this->ac_url . '?token=' . $this->ac_token . '&path_info=/projects/' . $project_id . '/tickets/' . $ticket_id . '&format=json';
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -201,6 +205,7 @@ class activeCollabCli
     $response = curl_exec($ch);
     $data = json_decode($response);
     curl_close($ch);
+
     return $data;
   }
 
@@ -226,11 +231,11 @@ class activeCollabCli
     foreach ($data as $task) {
       if ($task->type == 'Ticket') {
         $tasks[$task->ticket_id] = $task->name;
-      }
-      else if ($task->type == 'Task') {
+      } elseif ($task->type == 'Task') {
         $tasks[$task->id] = 'Task: ' . $task->name;
       }
     }
+
     return $tasks;
   }
 }
