@@ -8,5 +8,9 @@
   "require": {
       "symfony/console": "2.*",
       "kostajh/ActiveCollabApi": "dev-rewrite"
-  }
+  },
+  "autoload": {
+      "psr-0": { "ActiveCollabConsole": "src/" }
+  },
+  "bin": ["ac"]
 }
