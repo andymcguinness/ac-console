@@ -55,9 +55,14 @@ class TaskInfoCommand extends Command
         }
         $projectId = substr($projectTicket, 0, strpos($projectTicket, ':'));
         $ticketId = substr($projectTicket, strpos($projectTicket, ':') + 1);
+        if (!$projectId || !$ticketId) {
+          $output->writeln("<error>Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}</error>");
+          return false;
+        }
         $data = $this->acConsole->getTicket($projectId, $ticketId);
+
         $info = array();
-        if (!is_array($data)) {
+        if (is_object($data)) {
           $output->writeln("<info>Project ID:</info> " . $data->project_id);
           $output->writeln("<info>Ticket Name:</info> " . $data->name);
           $output->writeln("<info>Created on:</info> " . $data->created_on);
@@ -81,6 +86,9 @@ class TaskInfoCommand extends Command
           }
 
           return;
+        } else {
+          $output->writeln("<error>Could not load data for project " . $projectId . " and ticket " . $ticketId . "</error>");
+          return false;
         }
     }
 
