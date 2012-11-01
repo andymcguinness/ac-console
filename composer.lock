@@ -1,5 +1,5 @@
 {
-    "hash": "184d150173b6f0ac9494779cfc020cdc",
+    "hash": "453ee97afa0028f84e630148b63bc658",
     "packages": [
         {
             "name": "kostajh/activeCollabAPI",
@@ -7,15 +7,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kostajh/ActiveCollabApi",
-                "reference": "c10cb17f8c71b012a4d2fa1755d381a754f48a96"
+                "reference": "be03c8336231d878492eb716a9ad3391a3a608fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/c10cb17f8c71b012a4d2fa1755d381a754f48a96",
-                "reference": "c10cb17f8c71b012a4d2fa1755d381a754f48a96",
+                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/be03c8336231d878492eb716a9ad3391a3a608fa",
+                "reference": "be03c8336231d878492eb716a9ad3391a3a608fa",
                 "shasum": ""
             },
-            "time": "1351736697",
+            "time": "1351740964",
             "type": "library",
             "installation-source": "source",
             "autoload": {
