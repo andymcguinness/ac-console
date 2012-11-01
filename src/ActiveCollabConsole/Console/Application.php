@@ -5,6 +5,7 @@ namespace ActiveCollabConsole\Console;
 use Symfony\Component\Console\Application as BaseApplication;
 use ActiveCollabConsole\Console\Command\UserTasksCommand;
 use ActiveCollabConsole\Console\Command\TaskInfoCommand;
+use ActiveCollabConsole\Console\Command\GetVersionCommand;
 use ActiveCollabConsole\ActiveCollabConsole;
 
 /**
@@ -23,6 +24,7 @@ class Application extends BaseApplication
 
         $this->add(new UserTasksCommand());
         $this->add(new TaskInfoCommand());
+        $this->add(new GetVersionCommand());
     }
 
     /**
