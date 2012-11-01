@@ -9,7 +9,7 @@ namespace ActiveCollabConsole;
 use ActiveCollabApi\ActiveCollabApi;
 
 /**
- *
+ * Provides methods for interacting with the ActiveCollabApi.
  */
 class ActiveCollabConsole extends ActiveCollabApi
 {
@@ -22,10 +22,10 @@ class ActiveCollabConsole extends ActiveCollabApi
   public function __construct()
   {
     if (!$this->checkRequirements()) {
-      return FALSE;
+      return false;
     }
-    $current_user = get_current_user();
-    $config = parse_ini_file('/Users/' . $current_user . '/.active_collab');
+    $currentUser = get_current_user();
+    $config = parse_ini_file('/Users/' . $currentUser . '/.active_collab');
     $this->projects = serialize($config['projects']);
     parent::setKey($config['ac_token']);
     parent::setAPIUrl($config['ac_url']);
@@ -34,25 +34,23 @@ class ActiveCollabConsole extends ActiveCollabApi
 
   /**
    * Check to see if config file is present and for other requirements.
+   *
+   * @return true if all requirements pass, false otherwise.
    */
   public function checkRequirements()
   {
-    $current_user = get_current_user();
-    if (!file_exists('vendor/autoload.php')) {
-      print "Please run the install.sh script.\n";
+    $currentUser = get_current_user();
 
-      return FALSE;
-    }
-    if (!file_exists('/Users/' . $current_user . '/.active_collab')) {
+    if (!file_exists('/Users/' . $currentUser . '/.active_collab')) {
       print "Please create a ~/.active_collab file.\n";
 
-      return FALSE;
+      return false;
     }
-    $file = parse_ini_file('/Users/' . $current_user . '/.active_collab');
+    $file = parse_ini_file('/Users/' . $currentUser . '/.active_collab');
     if (!is_array($file)) {
       print "Could not parse config file.";
 
-      return FALSE;
+      return false;
     }
     if (!isset($file['ac_url']) || !$file['ac_url']) {
       print "Please specify a value for ac_url in your config file!\n";
@@ -61,10 +59,10 @@ class ActiveCollabConsole extends ActiveCollabApi
       print "Please specify a value for ac_token in your config file!\n";
     }
     if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
-      return FALSE;
+      return false;
     }
 
-    return TRUE;
+    return true;
   }
 
 }
