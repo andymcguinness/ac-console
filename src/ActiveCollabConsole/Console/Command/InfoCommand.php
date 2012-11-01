@@ -8,10 +8,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use ActiveCollabConsole\ActiveCollabConsole;
 
 /**
- * Obtains the current version of the activeCollab API.
+ * Obtains information about the current activeCollab instance.
  * @author Kosta Harlan <kostajh@gmail.com>
  */
-class GetVersionCommand extends Command
+class InfoCommand extends Command
 {
 
     /**
@@ -29,9 +29,9 @@ class GetVersionCommand extends Command
     protected function configure()
     {
       $this
-        ->setName('get-version')
-        ->setDescription('Display activeCollab API version.')
-        ->setHelp('The <info>get-version</info> command displays the version for the activeCollab instance.
+        ->setName('info')
+        ->setDescription('Display API information about the current activeCollab instance')
+        ->setHelp('The <info>info</info> command displays API information for the activeCollab instance.
         ');
     }
 
@@ -41,9 +41,11 @@ class GetVersionCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($version = $this->acConsole->getVersion()) {
-          $output->writeln("<info>API Version</info> " . $version->api_version);
-          $output->writeln("<info>System Version</info> " . $version->system_version);
-          $output->writeln("<info>System Edition</info> " . $version->system_edition);
+          $output->writeln("<info>API Version:</info> " . $version->api_version);
+          $output->writeln("<info>System Version:</info> " . $version->system_version);
+          $output->writeln("<info>System Edition:</info> " . $version->system_edition);
+          $output->writeln("<info>Logged-in User:</info> " . $version->logged_user);
+          $output->writeln("<info>Read/write Access:</info> " . (($version->read_only === 0) ? 'Read/write' : 'Read-only'));
         }
         else {
           $output->writeln("<error>Could not access version information!</error>");
