@@ -1,4 +1,4 @@
-activeCollab CLI
+activeCollab Console 
 ================
 
 A command-line interface for activeCollab 2.x.
@@ -12,7 +12,7 @@ A command-line interface for activeCollab 2.x.
 
 ## Usage
 
-Type "php ac.php" to see a list of commands.
+`./ac-console` for a list of options.
 
 ## Configuration
 
