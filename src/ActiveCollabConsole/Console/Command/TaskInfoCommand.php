@@ -4,6 +4,7 @@ namespace ActiveCollabConsole\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use ActiveCollabConsole\ActiveCollabConsole;
 
@@ -54,8 +55,7 @@ class TaskInfoCommand extends Command
         }
         $projectId = substr($projectTicket, 0, strpos($projectTicket, ':'));
         $ticketId = substr($projectTicket, strpos($projectTicket, ':') + 1);
-        $data = $this->acConsole->getTaskInfo($projectId, $ticketId);
-
+        $data = $this->acConsole->getTicket($projectId, $ticketId);
         $info = array();
         if (!is_array($data)) {
           $output->writeln("<info>Project ID:</info> " . $data->project_id);
