@@ -46,8 +46,8 @@ class UserTasksCommand extends Command
     }
 
     /**
-* @see Command
-*/
+     * @see Command
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
       if ($projects = $input->getOption('project')) {
