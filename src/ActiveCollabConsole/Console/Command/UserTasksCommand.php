@@ -52,11 +52,11 @@ class UserTasksCommand extends Command
 */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-       $ac_cli = new ActiveCollabConsole();
       if ($projects = $input->getOption('project')) {
           $projects = array_flip($projects);
-      } else {
-        $projects = unserialize($ac_cli->projects);
+      }
+      else {
+        $projects = unserialize($this->ac_console->projects);
         if (!is_array($projects)) {
           $output->writeln("<error>Could not load any projects to query.</error>");
 
