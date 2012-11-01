@@ -9,17 +9,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 use ActiveCollabConsole\ActiveCollabConsole;
 
 /**
-* @author Kosta Harlan <kostajh@gmail.com>
-*/
+ * Displays project tasks for the authenticating user.
+ *
+ * @author Kosta Harlan <kostajh@gmail.com>
+ */
 class UserTasksCommand extends Command
 {
 
     /**
-     * @param ActiveCollabConsole $ac_console
+     * @param ActiveCollabConsole $acConsole
      */
-    public function __construct(ActiveCollabConsole $ac_console = null)
+    public function __construct(ActiveCollabConsole $acConsole = null)
     {
-        $this->ac_console = $ac_console ?: new ActiveCollabConsole();
+        $this->acConsole = $acConsole ?: new ActiveCollabConsole();
         parent::__construct();
     }
 
@@ -28,21 +30,20 @@ class UserTasksCommand extends Command
      */
     protected function configure()
     {
-        $this
-            ->setName('user-tasks')
-            ->setDescription('List tasks for the authenticating user.')
-            ->setDefinition(array(
-                new InputOption('project', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify the project to load tasks for', null),
-            ))
-            ->setHelp(
-                    'The <info>user-tasks</info> command will display a list of tasks for the current user.
+      $this
+        ->setName('user-tasks')
+        ->setDescription('List tasks for the authenticating user.')
+        ->setDefinition(array(
+            new InputOption('project', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify the project to load tasks for', null),
+        ))
+        ->setHelp('The <info>user-tasks</info> command will display a list of tasks for the current user.
 
-              <comment>Samples:</comment>
-                To run with default options:
-                  <info>php ac.php user-tasks</info>
-                To list tasks for a specific project
-                  <info>php ac.php user-tasks 150</info>'
-                );
+          <comment>Samples:</comment>
+            To run with default options:
+              <info>php ac.php user-tasks</info>
+            To list tasks for a specific project
+              <info>php ac.php user-tasks 150</info>'
+        );
     }
 
     /**
@@ -53,19 +54,19 @@ class UserTasksCommand extends Command
       if ($projects = $input->getOption('project')) {
           $projects = array_flip($projects);
       } else {
-        $projects = unserialize($this->ac_console->projects);
+        $projects = unserialize($this->acConsole->projects);
         if (!is_array($projects)) {
           $output->writeln("<error>Could not load any projects to query.</error>");
 
-          return FALSE;
+          return false;
         }
       }
 
-      foreach ($projects as $project_id => $name) {
-        if ($tasks = $this->ac_console->getUserTasks($project_id)) {
+      foreach ($projects as $projectId => $name) {
+        if ($tasks = $this->acConsole->getUserTasks($projectId)) {
           $output->writeln("<info>===========================================</info>");
-          $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;
-          $output->writeln("<info>Tasks for Project #$project_header</info>");
+          $projectHeader = ($name) ? $projectId . ' - ' . $name : $projectId;
+          $output->writeln("<info>Tasks for Project #$projectHeader</info>");
           $output->writeln("<info>===========================================</info>");
           if ($tasks) {
             foreach ($tasks as $task) {
@@ -79,7 +80,7 @@ class UserTasksCommand extends Command
             $output->writeln("No tasks found!");
           }
         } else {
-          $output->writeln("<error>Could not load any tasks for project #$project_id</error>");
+          $output->writeln("<error>Could not load any tasks for project #$projectId</error>");
         }
 
       }
