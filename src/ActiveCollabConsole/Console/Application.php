@@ -12,8 +12,8 @@ use ActiveCollabConsole\ActiveCollabConsole;
 class Application extends BaseApplication
 {
     /**
-* Constructor.
-*/
+     * Constructor.
+     */
     public function __construct()
     {
         error_reporting(-1);
@@ -23,6 +23,11 @@ class Application extends BaseApplication
         $this->add(new UserTasksCommand());
     }
 
+    /**
+     * Return long version.
+     *
+     * @return the version info for the application.
+     */
     public function getLongVersion()
     {
         return parent::getLongVersion().' by <comment>Kosta Harlan</comment>';
