@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use ActiveCollabConsole\ActiveCollabConsole;
-use ActiveCollabApi\ActiveCollabApi;
 
 /**
 * @author Kosta Harlan <kostajh@gmail.com>
@@ -16,7 +15,7 @@ class UserTasksCommand extends Command
 {
 
     /**
-     * @param ActiveCollabConsole           $ac_console
+     * @param ActiveCollabConsole $ac_console
      */
     public function __construct(ActiveCollabConsole $ac_console = null)
     {
@@ -46,7 +45,6 @@ class UserTasksCommand extends Command
                 );
     }
 
-
     /**
 * @see Command
 */
@@ -54,8 +52,7 @@ class UserTasksCommand extends Command
     {
       if ($projects = $input->getOption('project')) {
           $projects = array_flip($projects);
-      }
-      else {
+      } else {
         $projects = unserialize($this->ac_console->projects);
         if (!is_array($projects)) {
           $output->writeln("<error>Could not load any projects to query.</error>");
