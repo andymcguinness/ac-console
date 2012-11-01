@@ -7,6 +7,10 @@
 
 namespace ActiveCollabConsole;
 use ActiveCollabApi\ActiveCollabApi;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Provides methods for interacting with the ActiveCollabApi.
@@ -24,12 +28,6 @@ class ActiveCollabConsole extends ActiveCollabApi
     if (!$this->checkRequirements()) {
       return false;
     }
-    $currentUser = get_current_user();
-    $config = parse_ini_file('/Users/' . $currentUser . '/.active_collab');
-    $this->projects = serialize($config['projects']);
-    parent::setKey($config['ac_token']);
-    parent::setAPIUrl($config['ac_url']);
-
   }
 
   /**
@@ -40,26 +38,34 @@ class ActiveCollabConsole extends ActiveCollabApi
   public function checkRequirements()
   {
     $currentUser = get_current_user();
+    $fs = new Filesystem();
+    $configFile = '/Users/' . $currentUser . '/.active_collab';
 
-    if (!file_exists('/Users/' . $currentUser . '/.active_collab')) {
+    if (!$fs->exists($configFile)) {
       print "Please create a ~/.active_collab file.\n";
+      return false;
+    }
 
-      return false;
-    }
-    $file = parse_ini_file('/Users/' . $currentUser . '/.active_collab');
-    if (!is_array($file)) {
-      print "Could not parse config file.";
+    $yaml = new Parser();
 
-      return false;
-    }
-    if (!isset($file['ac_url']) || !$file['ac_url']) {
-      print "Please specify a value for ac_url in your config file!\n";
-    }
-    if (!isset($file['ac_token']) || !$file['ac_token']) {
-      print "Please specify a value for ac_token in your config file!\n";
-    }
-    if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
-      return false;
+    try {
+        $file = $yaml->parse(file_get_contents($configFile));
+        if (!isset($file['ac_url']) || !$file['ac_url']) {
+          print "Please specify a value for ac_url in your config file!\n";
+        } else {
+          parent::setAPIUrl($file['ac_url']);
+        }
+        if (!isset($file['ac_token']) || !$file['ac_token']) {
+          print "Please specify a value for ac_token in your config file!\n";
+        } else {
+          parent::setKey($file['ac_token']);
+        }
+        if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
+          return false;
+        }
+    } catch (ParseException $e) {
+        printf("Unable to parse the YAML string: %s", $e->getMessage());
+        return false;
     }
 
     return true;
