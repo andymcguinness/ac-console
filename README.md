@@ -24,7 +24,7 @@ The file configuration is in YAML format. It should look something like:
     ac_url: https://{site_url}/api.php
     ac_token: {token}
     projects:
-      10: Prooject I care about
+      10: Project I care about
       25: Another project
 
 Note that the `projects` section is optional.
