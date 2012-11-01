@@ -14,9 +14,19 @@ use ActiveCollabApi\ActiveCollabApi;
 */
 class UserTasksCommand extends Command
 {
+
     /**
-* @see Command
-*/
+     * @param ActiveCollabConsole           $ac_console
+     */
+    public function __construct(ActiveCollabConsole $ac_console = null)
+    {
+        $this->ac_console = $ac_console ?: new ActiveCollabConsole();
+        parent::__construct();
+    }
+
+    /**
+     * @see Command
+     */
     protected function configure()
     {
         $this
@@ -55,10 +65,7 @@ class UserTasksCommand extends Command
       }
 
       foreach ($projects as $project_id => $name) {
-        $ac = new ActiveCollabConsole();
-        $tmp = $ac->getUserTasks($project_id);
-        print_r($tmp);
-        if ($tasks = $ac->getUserTasks($project_id)) {
+        if ($tasks = $this->ac_console->getUserTasks($project_id)) {
           $output->writeln("<info>===========================================</info>");
           $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;
           $output->writeln("<info>Tasks for Project #$project_header</info>");

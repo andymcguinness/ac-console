@@ -26,9 +26,10 @@ class ActiveCollabConsole extends ActiveCollabApi
     }
     $current_user = get_current_user();
     $config = parse_ini_file('/Users/' . $current_user . '/.active_collab');
-    $this->ac_url = $config['ac_url'];
-    $this->ac_token = $config['ac_token'];
     $this->projects = serialize($config['projects']);
+    parent::setKey($config['ac_token']);
+    parent::setAPIUrl($config['ac_url']);
+
   }
 
   /**
