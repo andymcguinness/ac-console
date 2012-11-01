@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use ActiveCollabConsole\ActiveCollabConsole;
+use ActiveCollabApi\ActiveCollabApi;
 
 /**
 * @author Kosta Harlan <kostajh@gmail.com>
@@ -54,8 +55,9 @@ class UserTasksCommand extends Command
       }
 
       foreach ($projects as $project_id => $name) {
-        $ac = new ActiveCollabProject($project_id);
-
+        $ac = new ActiveCollabConsole();
+        $tmp = $ac->getUserTasks($project_id);
+        print_r($tmp);
         if ($tasks = $ac->getUserTasks($project_id)) {
           $output->writeln("<info>===========================================</info>");
           $project_header = ($name) ? $project_id . ' - ' . $name : $project_id;

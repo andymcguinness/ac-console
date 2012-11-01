@@ -11,7 +11,7 @@ use ActiveCollabApi\ActiveCollabApi;
 /**
  *
  */
-class ActiveCollabConsole
+class ActiveCollabConsole extends ActiveCollabApi
 {
 
   const VERSION = '0.1';

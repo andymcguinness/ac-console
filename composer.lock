@@ -7,15 +7,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kostajh/ActiveCollabApi",
-                "reference": "927a456233008f33aec9dd4ebcc0176009895d9d"
+                "reference": "c10cb17f8c71b012a4d2fa1755d381a754f48a96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/927a456233008f33aec9dd4ebcc0176009895d9d",
-                "reference": "927a456233008f33aec9dd4ebcc0176009895d9d",
+                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/c10cb17f8c71b012a4d2fa1755d381a754f48a96",
+                "reference": "c10cb17f8c71b012a4d2fa1755d381a754f48a96",
                 "shasum": ""
             },
-            "time": "1351700137",
+            "time": "1351736697",
             "type": "library",
             "installation-source": "source",
             "autoload": {
