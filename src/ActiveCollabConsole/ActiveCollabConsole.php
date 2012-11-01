@@ -24,7 +24,8 @@ class ActiveCollabConsole
     if (!$this->checkRequirements()) {
       return FALSE;
     }
-    $config = parse_ini_file('/Users/' . CURRENT_USER . '/.active_collab');
+    $current_user = get_current_user();
+    $config = parse_ini_file('/Users/' . $current_user . '/.active_collab');
     $this->ac_url = $config['ac_url'];
     $this->ac_token = $config['ac_token'];
     $this->projects = serialize($config['projects']);
