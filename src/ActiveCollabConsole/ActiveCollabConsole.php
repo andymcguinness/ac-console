@@ -71,4 +71,34 @@ class ActiveCollabConsole extends ActiveCollabApi
     return true;
   }
 
+  /**
+   * Get a list of assignees for a task.
+   *
+   * @param object $ticket
+   * @return array
+   *         An array of names and user IDs, structured by responsibility.
+   *         For example:
+   *           array('responsible' => array(10 => 'Some name'), 'assigned' =>
+   *            array(12 => 'Someone else', 13 => 'another person');
+   *
+   */
+  public function getAssignees($ticket) {
+    if (!is_object($ticket)) {
+      return false;
+    }
+    $assignees = $ticket->assignees;
+    $ticketId = $ticket->ticket_id;
+    $users = array('assigned' => null, 'responsible' => null);
+    foreach ($assignees as $assignee) {
+      // Obtain the name for each assignee.
+      // @todo call out to the API.
+      if ($assignee->is_owner) {
+        $users['responsible'] = array('id' => $assignee->user_id, 'name' => 'some name');
+      } else {
+        $users['assigned'][] = array('id' => $assignee->user_id, 'name' => 'another name');
+      }
+    }
+    return $users;
+  }
+
 }

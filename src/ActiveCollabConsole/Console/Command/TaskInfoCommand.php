@@ -60,6 +60,23 @@ class TaskInfoCommand extends Command
           return false;
         }
         $data = $this->acConsole->getTicket($projectId, $ticketId);
+        $project = $this->acConsole->getProject($projectId);
+        print_r($project);
+        exit;
+        // Check to see if logged-in user is owner/responsible for ticket.
+        $output->writeln("<info>Assignees:</info>");
+        $assignees = $this->acConsole->getAssignees($data);
+        $assigned = $assignees['assigned'];
+        $responsible = $assignees['responsible'];
+        if ($responsible) {
+          $output->writeln("<comment>Responsible:</comment> " . $responsible['name']);
+        }
+        if ($assigned) {
+          foreach ($assigned as $assignee) {
+            $names[] = $assignee['name']  ;
+          }
+          $output->writeln("<info>Assigned:</info> " . implode(', ', $names));
+        }
 
         $info = array();
         if (is_object($data)) {
