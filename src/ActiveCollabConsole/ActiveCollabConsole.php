@@ -63,6 +63,9 @@ class ActiveCollabConsole extends ActiveCollabApi
         if (!isset($file['ac_url']) || !isset($file['ac_token']) || !$file['ac_url'] || !$file['ac_token']) {
           return false;
         }
+        if (isset($file['projects'])) {
+          $this->projects = serialize($file['projects']);
+        }
     } catch (ParseException $e) {
         printf("Unable to parse the YAML string: %s", $e->getMessage());
         return false;
