@@ -3,7 +3,7 @@
 namespace ActiveCollabConsole\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use ActiveCollabConsole\ActiveCollabConsole;
@@ -34,15 +34,15 @@ class UserTasksCommand extends Command
         ->setName('user-tasks')
         ->setDescription('List tasks for the authenticating user.')
         ->setDefinition(array(
-            new InputOption('project', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Specify the project to load tasks for', null),
+            new InputArgument('project', InputArgument::OPTIONAL, 'Project ID', NULL),
         ))
         ->setHelp('The <info>user-tasks</info> command will display a list of tasks for the current user.
 
           <comment>Samples:</comment>
             To run with default options:
-              <info>php ac.php user-tasks</info>
+              <info>ac user-tasks</info>
             To list tasks for a specific project
-              <info>php ac.php user-tasks 150</info>'
+              <info>ac user-tasks 150</info>'
         );
     }
 
@@ -51,7 +51,7 @@ class UserTasksCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-      if ($projects = $input->getOption('project')) {
+      if ($projects = (array)$input->getArgument('project')) {
           $projects = array_flip($projects);
       } else {
         $projects = unserialize($this->acConsole->projects);

@@ -39,7 +39,7 @@ class TaskInfoCommand extends Command
 
         <comment>Samples:</comment>
         To display ticket information for ticket 233 in project 150
-        <info>php ac.php task-info 150:233</info>
+        <info>ac task-info 150:233</info>
         ');
     }
 
