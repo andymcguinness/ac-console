@@ -13,7 +13,13 @@ A command-line interface for activeCollab 2.x.
 
 ## Usage
 
-Type `ac` for a list of options.
+Type `ac list` for a list of commands.
+
+### Available commands
+
+  `info`         Display API information about the current activeCollab instance
+  `task-info`    Display information about a specific ticket.
+  `user-tasks`   List tasks for the authenticating user.
 
 ## Configuration
 
