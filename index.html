@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ac-console by kostajh</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>ac-console</h1>
+        <p>A command-line interface for activeCollab 2.x</p>
+
+        <p class="view"><a href="https://github.com/kostajh/ac-console">View the Project on GitHub <small>kostajh/ac-console</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/kostajh/ac-console/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kostajh/ac-console/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kostajh/ac-console">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Installation</h2>
+
+<ol>
+<li>Clone this repo.</li>
+<li><code>cd /path/to/ac-console</code></li>
+<li><code>curl http://getcomposer.org/installer | php</code></li>
+<li><code>php composer.phar install</code></li>
+<li><code>ln -s /path/to/ac-console/ac-console /usr/local/bin/ac</code></li>
+</ol><h2>Usage</h2>
+
+<p>Type <code>ac list</code> for a list of commands.</p>
+
+<h3>Available commands</h3>
+
+<p><code>info</code>         Display API information about the current activeCollab instance</p>
+
+<p><code>task-info</code>    Display information about a specific ticket.</p>
+
+<p><code>user-tasks</code>   List tasks for the authenticating user.</p>
+
+<h2>Configuration</h2>
+
+<p>Your <code>~/.active_collab</code> file contains information for connecting with AC.</p>
+
+<p>The file configuration is in YAML format. It should look something like:</p>
+
+<pre><code>ac_url: https://{site_url}/api.php
+ac_token: {token}
+projects:
+  10: Project I care about
+  25: Another project
+</code></pre>
+
+<p>Note that the <code>projects</code> section is optional.</p>
+
+<p>Obtain your <code>ac_token</code> by logging into activeCollab and navigating to Profile &gt; API Settings.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/kostajh">kostajh</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
