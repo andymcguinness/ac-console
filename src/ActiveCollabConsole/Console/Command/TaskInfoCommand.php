@@ -59,31 +59,29 @@ class TaskInfoCommand extends Command
           $output->writeln("<error>Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}</error>");
           return false;
         }
+        $currentUserId = $this->acConsole->whoAmI();
         $data = $this->acConsole->getTicket($projectId, $ticketId);
         $project = $this->acConsole->getProject($projectId);
-        print_r($project);
-        exit;
-        // Check to see if logged-in user is owner/responsible for ticket.
-        $output->writeln("<info>Assignees:</info>");
-        $assignees = $this->acConsole->getAssignees($data);
-        $assigned = $assignees['assigned'];
-        $responsible = $assignees['responsible'];
-        if ($responsible) {
-          $output->writeln("<comment>Responsible:</comment> " . $responsible['name']);
-        }
-        if ($assigned) {
-          foreach ($assigned as $assignee) {
-            $names[] = $assignee['name']  ;
-          }
-          $output->writeln("<info>Assigned:</info> " . implode(', ', $names));
-        }
-
         $info = array();
         if (is_object($data)) {
-          $output->writeln("<info>Project ID:</info> " . $data->project_id);
-          $output->writeln("<info>Ticket Name:</info> " . $data->name);
+          $output->writeln("<info>Project:</info> " . $project->name);
+          $output->writeln("<info>Ticket:</info> [#" . $data->ticket_id . "] " . $data->name);
           $output->writeln("<info>Created on:</info> " . $data->created_on);
           $output->writeln("<info>URL:</info> " . $data->permalink);
+          // Display assignees.
+          $output->writeln("<info>Assignees:</info>");
+          $assignees = $this->acConsole->getAssigneesByTicket($data);
+          $assigned = $assignees['assigned'];
+          $responsible = $assignees['responsible'];
+          if ($responsible) {
+            $output->writeln("    <comment>Responsible:</comment> " . $responsible['name']);
+          }
+          if ($assigned) {
+            foreach ($assigned as $assignee) {
+              $names[] = $assignee['name']  ;
+            }
+            $output->writeln("    <info>Assigned:</info> " . implode(', ', $names));
+          }
           $output->writeln("<info>Body: </info>" . trim(strip_tags($data->body), 200));
           isset($data->due_on) ? $output->writeln("<info>Due on:</info> " . $data->due_on) : NULL;
           if (isset($data->tasks) && $data->tasks) {
