@@ -91,9 +91,10 @@ class UserTasksCommand extends Command
               }
               foreach ($tasks as $task) {
                 if ($task->type == 'Ticket') {
-                $output->writeln('  <comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
-                } else {
-                  // @todo Display tasks
+                  $output->writeln('  <comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
+                }
+                elseif ($task->type == 'Task') {
+                  // $output->writeln('    <comment>TASK: ' . $task->body . '</comment>');
                 }
               }
             }
