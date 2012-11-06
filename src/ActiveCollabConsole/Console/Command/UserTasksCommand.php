@@ -68,12 +68,33 @@ class UserTasksCommand extends Command
           $projectHeader = ($name) ? $projectId . ' - ' . $name : $projectId;
           $output->writeln("<info>Tasks for Project #$projectHeader</info>");
           $output->writeln("<info>===========================================</info>");
-          if ($tasks) {
-            foreach ($tasks as $task) {
-              if ($task->type == 'Ticket') {
-                $output->writeln('<comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
-              } else {
-                // @todo Display tasks
+          // Group tasks by milestone
+          $groupedTasks = array();
+          $milestones = array();
+          foreach ($tasks as $task) {
+            if (isset($task->milestone_id) && $task->milestone_id)  {
+              $groupedTasks[$task->milestone_id][] = $task;
+              if (!isset($milestones[$task->milestone_id])) {
+                $milestones[$task->milestone_id] = $this->acConsole->getMilestoneById($projectId, $task->milestone_id);
+              }
+            } else {
+              $groupedTasks['no_milestone'][] = $task;
+            }
+          }
+
+          if ($groupedTasks) {
+            foreach ($groupedTasks as $milestone => $tasks) {
+              // Get milestone data
+              if (is_numeric($milestone)) {
+                $completed = !empty($milestones[$milestone]->completed_on) ? ' [COMPLETED]' : NULL;
+                $output->writeln('<info>Milestone: ' . $milestones[$milestone]->name . $completed);
+              }
+              foreach ($tasks as $task) {
+                if ($task->type == 'Ticket') {
+                $output->writeln('  <comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
+                } else {
+                  // @todo Display tasks
+                }
               }
             }
           } else {
@@ -85,4 +106,5 @@ class UserTasksCommand extends Command
 
       }
     }
+
 }
