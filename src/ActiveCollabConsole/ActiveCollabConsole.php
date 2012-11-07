@@ -42,13 +42,12 @@ class ActiveCollabConsole extends ActiveCollabApi
     switch ($api_call) {
       case 'whoAmI':
       case 'getVersion':
-        $file = __DIR__ .'/app/config/version.yml';
         if (!$cache) {
-          return $this->cacheSet(parent::$api_call(), $file);
+          return $this->cacheSet(parent::$api_call(), 'version');
         }
-        $version = $this->cacheGet($file);
+        $version = $this->cacheGet('version');
         if (!$version) {
-          $data = $this->cacheSet(parent::getVersion(), $file);
+          $data = $this->cacheSet(parent::getVersion(), 'version');
           if ($api_call == 'getVersion') {
             return $data;
           }
@@ -60,7 +59,16 @@ class ActiveCollabConsole extends ActiveCollabApi
           return $version;
         }
         break;
-
+      case 'listPeople':
+        if (!$cache) {
+          return $this->cacheSet(parent::$api_call(), 'companies');
+        }
+        $companies = $this->cacheGet('companies');
+        if (!$companies) {
+          $data = $this->cacheSet(parent::listPeople(), 'companies');
+          return $companies;
+        }
+        break;
       default:
         return parent::$api_call();
         break;
@@ -71,22 +79,27 @@ class ActiveCollabConsole extends ActiveCollabApi
    * Set cache.
    *
    * @param array $data
-   * @param string $file
+   * @param string $bin
    */
-  private function cacheSet($data, $file) {
+  private function cacheSet($data, $bin) {
+    $file = __DIR__ . '/app/cache/' . $bin . '.yml';
     $dumper = new Dumper();
-    $yaml = $dumper->dump($data);
+    // Convert any objects to arrays.
+    $json  = json_encode($data);
+    $array = json_decode($json, true);
+    $yaml = $dumper->dump($array, 2);
     file_put_contents($file, $yaml);
   }
 
   /**
    * Get cache.
    *
-   * @param string $file
+   * @param string $bin
    */
-  private function cacheGet($file) {
+  private function cacheGet($bin) {
     $yaml = new Parser();
     $fs = new Filesystem();
+    $file = __DIR__ . '/app/cache/' . $bin . '.yml';
     if (!$fs->exists($file)) {
       $fs->touch($file);
     }
@@ -134,9 +147,9 @@ class ActiveCollabConsole extends ActiveCollabApi
         return false;
     }
 
-    // Create config directory.
-    if (!$fs->exists(__DIR__ . '/app/config')) {
-      $fs->mkdir(__DIR__ . '/app/config');
+    // Create cache directory.
+    if (!$fs->exists(__DIR__ . '/app/cache')) {
+      $fs->mkdir(__DIR__ . '/app/cache');
     }
 
     return true;
@@ -181,6 +194,24 @@ class ActiveCollabConsole extends ActiveCollabApi
       }
     }
     return $users;
+  }
+
+  /**
+   * Load a user by user ID.
+   *
+   * @param int $userId.
+   *
+   * @return user object or FALSE if not successful.
+   */
+  public function getUserById($userId) {
+    $users = $this->cacheGet('users');
+    if (!isset($users[$userId])) {
+      // Get all companies in system.
+      print 'listing people';
+      $companies = $this->api('listPeople');
+      print_r($companies);
+    }
+    print_r($users);
   }
 
 }

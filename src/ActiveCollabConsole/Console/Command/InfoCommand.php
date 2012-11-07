@@ -41,11 +41,11 @@ class InfoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($version = $this->acConsole->api('getVersion')) {
-          $output->writeln("<info>API Version:</info> " . $version->api_version);
-          $output->writeln("<info>System Version:</info> " . $version->system_version);
-          $output->writeln("<info>System Edition:</info> " . $version->system_edition);
-          $output->writeln("<info>Logged-in User:</info> " . $version->logged_user);
-          $output->writeln("<info>Read/write Access:</info> " . (($version->read_only === 0) ? 'Read/write' : 'Read-only'));
+          $output->writeln("<info>API Version:</info> " . $version['api_version']);
+          $output->writeln("<info>System Version:</info> " . $version['system_version']);
+          $output->writeln("<info>System Edition:</info> " . $version['system_edition']);
+          $output->writeln("<info>Logged-in User:</info> " . $version['logged_user']);
+          $output->writeln("<info>Read/write Access:</info> " . (($version['read_only'] === 0) ? 'Read/write' : 'Read-only'));
         }
         else {
           $output->writeln("<error>Could not access version information!</error>");
