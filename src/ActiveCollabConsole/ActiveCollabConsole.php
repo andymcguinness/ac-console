@@ -68,6 +68,7 @@ class ActiveCollabConsole extends ActiveCollabApi
           $data = $this->cacheSet(parent::listPeople(), 'companies');
           return $companies;
         }
+        return $companies;
         break;
       default:
         return parent::$api_call();
@@ -207,11 +208,24 @@ class ActiveCollabConsole extends ActiveCollabApi
     $users = $this->cacheGet('users');
     if (!isset($users[$userId])) {
       // Get all companies in system.
-      print 'listing people';
       $companies = $this->api('listPeople');
-      print_r($companies);
+      $users = array();
+      foreach ($companies as $company) {
+        // Load the company
+        $companyData = $this->getCompanyById($company['id']);
+        if (isset($companyData->users) && !empty($companyData->users)) {
+          foreach ($companyData->users as $user) {
+            $users[$user->id] = (array)$user;
+          }
+        }
+      }
+      if ($users) {
+        $this->cacheSet($users, 'users');
+      }
     }
-    print_r($users);
+    if (isset($users[$userId])) {
+      return $users[$userId];
+    }
   }
 
 }
