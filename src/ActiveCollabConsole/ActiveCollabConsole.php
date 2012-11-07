@@ -6,11 +6,13 @@
  */
 
 namespace ActiveCollabConsole;
+
 use ActiveCollabApi\ActiveCollabApi;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Dumper;
 
 /**
  * Provides methods for interacting with the ActiveCollabApi.
@@ -28,6 +30,67 @@ class ActiveCollabConsole extends ActiveCollabApi
     if (!$this->checkRequirements()) {
       return false;
     }
+  }
+
+  /**
+   * Wrapper around calling the ActiveCollab API. Allows for checking cache
+   * prior to calling API.
+   */
+  public function api($api_call, $cache = TRUE) {
+    $yaml = new Parser();
+
+    switch ($api_call) {
+      case 'whoAmI':
+      case 'getVersion':
+        $file = __DIR__ .'/app/config/version.yml';
+        if (!$cache) {
+          return $this->cacheSet(parent::$api_call(), $file);
+        }
+        $version = $this->cacheGet($file);
+        if (!$version) {
+          $data = $this->cacheSet(parent::getVersion(), $file);
+          if ($api_call == 'getVersion') {
+            return $data;
+          }
+          else {
+            return $data['logged_user'];
+          }
+        }
+        else {
+          return $version;
+        }
+        break;
+
+      default:
+        return parent::$api_call();
+        break;
+      }
+  }
+
+  /**
+   * Set cache.
+   *
+   * @param array $data
+   * @param string $file
+   */
+  private function cacheSet($data, $file) {
+    $dumper = new Dumper();
+    $yaml = $dumper->dump($data);
+    file_put_contents($file, $yaml);
+  }
+
+  /**
+   * Get cache.
+   *
+   * @param string $file
+   */
+  private function cacheGet($file) {
+    $yaml = new Parser();
+    $fs = new Filesystem();
+    if (!$fs->exists($file)) {
+      $fs->touch($file);
+    }
+    return $yaml->parse(file_get_contents($file));
   }
 
   /**
@@ -69,6 +132,11 @@ class ActiveCollabConsole extends ActiveCollabApi
     } catch (ParseException $e) {
         printf("Unable to parse the YAML string: %s", $e->getMessage());
         return false;
+    }
+
+    // Create config directory.
+    if (!$fs->exists(__DIR__ . '/app/config')) {
+      $fs->mkdir(__DIR__ . '/app/config');
     }
 
     return true;

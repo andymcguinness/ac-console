@@ -59,7 +59,7 @@ class TaskInfoCommand extends Command
           $output->writeln("<error>Please specify a Project number and ticket ID in the format: {project_id}:{ticket_id}</error>");
           return false;
         }
-        $currentUserId = $this->acConsole->whoAmI();
+        $currentUserId = $this->acConsole->api('whoAmI');
         $data = $this->acConsole->getTicket($projectId, $ticketId);
         $project = $this->acConsole->getProject($projectId);
         $info = array();

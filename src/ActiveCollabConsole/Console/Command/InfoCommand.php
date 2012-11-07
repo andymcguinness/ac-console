@@ -40,7 +40,7 @@ class InfoCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($version = $this->acConsole->getVersion()) {
+        if ($version = $this->acConsole->api('getVersion')) {
           $output->writeln("<info>API Version:</info> " . $version->api_version);
           $output->writeln("<info>System Version:</info> " . $version->system_version);
           $output->writeln("<info>System Edition:</info> " . $version->system_edition);
