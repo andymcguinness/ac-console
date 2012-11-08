@@ -85,11 +85,12 @@ class TaskInfoCommand extends Command
           $data['body'] = $this->acConsole->cleanText($data['body']);
           $output->writeln("<info>Body: </info>\n" . trim($data['body'], 200));
           // Get last comment.
-          if (!empty($data->comments)) {
+          if (!empty($data['comments'])) {
+            $data['comments'][0]['body'] = $this->acConsole->cleanText($data['comments'][0]['body']);
             $output->writeln("<info>Last comment: </info>" . strip_tags($data['comments'][0]['body']));
           }
 
-          isset($data->due_on) ? $output->writeln("<info>Due on:</info> " . $data['due_on']) : NULL;
+          isset($data['due_on']) ? $output->writeln("<info>Due on:</info> " . $data['due_on']) : NULL;
           if (isset($data['tasks']) && $data['tasks']) {
             $output->writeln("<info>Tasks:</info>");
             foreach ($data['tasks'] as $task) {
