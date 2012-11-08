@@ -168,30 +168,21 @@ class ActiveCollabConsole extends ActiveCollabApi
    *
    */
   public function getAssigneesByTicket($ticket) {
-    if (!is_object($ticket)) {
+    if (!is_array($ticket)) {
       return false;
     }
 
-    $assignees = $ticket->assignees;
-    $ticketId = $ticket->ticket_id;
+    $assignees = $ticket['assignees'];
     $users = array('assigned' => null, 'responsible' => null);
-    // Load all users from project
-    $projectUserData = $this->listPeopleByProjectId($ticket->project_id);
-    // Make an array keyed on user ID
-    $projectUsers = array();
-    foreach ($projectUserData as $projectUser) {
-      $projectUsers[$projectUser->user_id] = $projectUser;
-    }
+
     // Loop through assignees and make an array of responsible/assigned.
     foreach ($assignees as $assignee) {
       // Obtain the name for each assignee.
-      $user = $this->getUserByProject($ticket->project_id, $assignee->user_id);
-      // $userInfo = $this->parseUserPermalink($projectUsers[$assignee->user_id]->permalink);
-      // $user = $this->getUser($userInfo['company_id'], $userInfo['user_id']);
-      if ($assignee->is_owner) {
-        $users['responsible'] = array('id' => $assignee->user_id, 'name' => $user->first_name . ' ' . $user->last_name);
+      $user = $this->getUserById($assignee['user_id']);
+      if ($assignee['is_owner']) {
+        $users['responsible'] = array('id' => $assignee['user_id'], 'name' => $user['first_name'] . ' ' . $user['last_name']);
       } else {
-        $users['assigned'][] = array('id' => $assignee->user_id, 'name' => $user->first_name . ' ' . $user->last_name);
+        $users['assigned'][] = array('id' => $assignee['user_id'], 'name' => $user['first_name'] . ' ' . $user['last_name']);
       }
     }
     return $users;
