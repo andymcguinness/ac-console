@@ -82,7 +82,8 @@ class TaskInfoCommand extends Command
             }
             $output->writeln("    <info>Assigned:</info> " . implode(', ', $names));
           }
-          $output->writeln("<info>Body: </info>" . trim(strip_tags($data['body']), 200));
+          $data['body'] = $this->acConsole->cleanText($data['body']);
+          $output->writeln("<info>Body: </info>\n" . trim($data['body'], 200));
           // Get last comment.
           if (!empty($data->comments)) {
             $output->writeln("<info>Last comment: </info>" . strip_tags($data['comments'][0]['body']));
@@ -92,7 +93,7 @@ class TaskInfoCommand extends Command
           if (isset($data['tasks']) && $data['tasks']) {
             $output->writeln("<info>Tasks:</info>");
             foreach ($data['tasks'] as $task) {
-              if ($task->completed_on) {
+              if ($task['completed_on']) {
                 $output->writeln("<info>[DONE]</info> " . $task['body']);
               } else {
                 $text = "<comment>[PENDING]</comment> " . $task['body'];

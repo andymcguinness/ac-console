@@ -175,6 +175,9 @@ class ActiveCollabConsole extends ActiveCollabApi
     $assignees = $ticket['assignees'];
     $users = array('assigned' => null, 'responsible' => null);
 
+    if (!$assignees) {
+      return $users;
+    }
     // Loop through assignees and make an array of responsible/assigned.
     foreach ($assignees as $assignee) {
       // Obtain the name for each assignee.
@@ -217,6 +220,24 @@ class ActiveCollabConsole extends ActiveCollabApi
     if (isset($users[$userId])) {
       return $users[$userId];
     }
+  }
+
+  /**
+   * Clean up formatting on HTML received from activeCollab.
+   *
+   * @param string $text
+   * @return string
+   */
+  public function cleanText($text) {
+    $text = str_replace('</p>', "\n", $text);
+    $text = str_replace('<p>', NULL, $text);
+    $text = str_replace("\n \n", "\n", $text);
+    $text = str_replace('<ul>', "\n", $text);
+    $text = str_replace('<li>', "* ", $text);
+    $text = str_replace('</li>', "\n", $text);
+    $text = str_replace('</ul>', NULL, $text);
+    $text = strip_tags($text);
+    return $text;
   }
 
 }
