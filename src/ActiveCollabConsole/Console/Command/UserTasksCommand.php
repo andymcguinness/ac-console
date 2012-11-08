@@ -72,10 +72,10 @@ class UserTasksCommand extends Command
           $groupedTasks = array();
           $milestones = array();
           foreach ($tasks as $task) {
-            if (isset($task->milestone_id) && $task->milestone_id)  {
-              $groupedTasks[$task->milestone_id][] = $task;
-              if (!isset($milestones[$task->milestone_id])) {
-                $milestones[$task->milestone_id] = $this->acConsole->getMilestoneById($projectId, $task->milestone_id);
+            if (isset($task['milestone_id']) && $task['milestone_id'])  {
+              $groupedTasks[$task['milestone_id']][] = $task;
+              if (!isset($milestones[$task['milestone_id']])) {
+                $milestones[$task['milestone_id']] = $this->acConsole->getMilestoneById($projectId, $task['milestone_id']);
               }
             } else {
               $groupedTasks['no_milestone'][] = $task;
@@ -86,14 +86,14 @@ class UserTasksCommand extends Command
             foreach ($groupedTasks as $milestone => $tasks) {
               // Get milestone data
               if (is_numeric($milestone)) {
-                $completed = !empty($milestones[$milestone]->completed_on) ? ' [COMPLETED]' : NULL;
-                $output->writeln('<info>Milestone: ' . $milestones[$milestone]->name . $completed);
+                $completed = !empty($milestones[$milestone]['completed_on']) ? ' [COMPLETED]' : NULL;
+                $output->writeln('<question>Milestone: ' . $milestones[$milestone]['name'] . $completed . '</question>');
               }
               foreach ($tasks as $task) {
-                if ($task->type == 'Ticket') {
-                  $output->writeln('  <comment>#' . $task->ticket_id . ': ' . $task->name . '</comment>');
+                if ($task['type'] == 'Ticket') {
+                  $output->writeln('  <comment>#' . $task['ticket_id'] . ': ' . $task['name'] . '</comment>');
                 }
-                elseif ($task->type == 'Task') {
+                elseif ($task['type'] == 'Task') {
                   // $output->writeln('    <comment>TASK: ' . $task->body . '</comment>');
                 }
               }
