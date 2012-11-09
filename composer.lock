@@ -1,5 +1,5 @@
 {
-    "hash": "51712ec1052dd7324b8db6617ef1d396",
+    "hash": "d555998826af50bd8d76c8bc5c954e05",
     "packages": [
         {
             "name": "kostajh/activeCollabAPI",
@@ -7,15 +7,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kostajh/ActiveCollabApi",
-                "reference": "9b4edf1e7364dab6e1ab2928f514569ca9c387a2"
+                "reference": "a03105e2238821117b2fd559ce97b6f58a889f6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/9b4edf1e7364dab6e1ab2928f514569ca9c387a2",
-                "reference": "9b4edf1e7364dab6e1ab2928f514569ca9c387a2",
+                "url": "https://github.com/kostajh/ActiveCollabApi/zipball/a03105e2238821117b2fd559ce97b6f58a889f6d",
+                "reference": "a03105e2238821117b2fd559ce97b6f58a889f6d",
                 "shasum": ""
             },
-            "time": "1352331796",
+            "time": "1352382807",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -136,6 +136,53 @@
                 }
             ],
             "description": "Symfony Filesystem Component",
+            "homepage": "http://symfony.com"
+        },
+        {
+            "name": "symfony/process",
+            "version": "v2.1.3",
+            "target-dir": "Symfony/Component/Process",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Process",
+                "reference": "v2.1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Process/zipball/v2.1.3",
+                "reference": "v2.1.3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "time": "2012-10-20 00:10:30",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Process": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Process Component",
             "homepage": "http://symfony.com"
         },
         {

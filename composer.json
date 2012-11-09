@@ -9,6 +9,7 @@
       "symfony/console": "2.*",
       "symfony/yaml": "2.*",
       "symfony/filesystem": "2.*",
+      "symfony/process": "2.*",
       "kostajh/ActiveCollabApi": "dev-rewrite"
   },
   "autoload": {
