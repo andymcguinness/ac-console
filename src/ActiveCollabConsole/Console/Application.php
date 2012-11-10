@@ -6,6 +6,7 @@ use Symfony\Component\Console\Application as BaseApplication;
 use ActiveCollabConsole\Console\Command\UserTasksCommand;
 use ActiveCollabConsole\Console\Command\TaskInfoCommand;
 use ActiveCollabConsole\Console\Command\InfoCommand;
+use ActiveCollabConsole\Console\Command\StatusCommand;
 use ActiveCollabConsole\ActiveCollabConsole;
 
 /**
@@ -25,6 +26,7 @@ class Application extends BaseApplication
         $this->add(new UserTasksCommand());
         $this->add(new TaskInfoCommand());
         $this->add(new InfoCommand());
+        $this->add(new StatusCommand());
     }
 
     /**
