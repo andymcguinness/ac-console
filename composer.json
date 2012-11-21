@@ -10,7 +10,8 @@
       "symfony/yaml": "2.*",
       "symfony/filesystem": "2.*",
       "symfony/process": "2.*",
-      "kostajh/ActiveCollabApi": "dev-rewrite"
+      "kostajh/ActiveCollabApi": "dev-rewrite",
+      "simplepie/simplepie": "dev-one-dot-three"
   },
   "autoload": {
       "psr-0": { "ActiveCollabConsole": "src/" }
