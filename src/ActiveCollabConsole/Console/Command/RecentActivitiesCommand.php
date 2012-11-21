@@ -41,6 +41,7 @@ class RecentActivitiesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Obtaining recent activities...');
+        $items = $this->acConsole->getRecentActivities();
     }
 
 }
