@@ -7,6 +7,7 @@ use ActiveCollabConsole\Console\Command\UserTasksCommand;
 use ActiveCollabConsole\Console\Command\TaskInfoCommand;
 use ActiveCollabConsole\Console\Command\InfoCommand;
 use ActiveCollabConsole\Console\Command\StatusCommand;
+use ActiveCollabConsole\Console\Command\RecentActivitiesCommand;
 use ActiveCollabConsole\ActiveCollabConsole;
 
 /**
@@ -27,6 +28,7 @@ class Application extends BaseApplication
         $this->add(new TaskInfoCommand());
         $this->add(new InfoCommand());
         $this->add(new StatusCommand());
+        $this->add(new RecentActivitiesCommand());
     }
 
     /**
