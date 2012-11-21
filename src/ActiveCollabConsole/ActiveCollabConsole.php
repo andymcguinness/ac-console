@@ -13,7 +13,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Dumper;
-use SimplePie;
 
 /**
  * Provides methods for interacting with the ActiveCollabApi.
@@ -23,6 +22,7 @@ class ActiveCollabConsole extends ActiveCollabApi
 
   const VERSION = '0.1';
 
+
   /**
    * Constructor
    */
@@ -31,6 +31,10 @@ class ActiveCollabConsole extends ActiveCollabApi
     if (!$this->checkRequirements()) {
       return false;
     }
+  }
+
+  public function getCacheDir() {
+    return __DIR__ . '/app/cache';
   }
 
   /**
@@ -242,20 +246,6 @@ class ActiveCollabConsole extends ActiveCollabApi
     $text = str_replace('</ul>', NULL, $text);
     $text = strip_tags($text);
     return $text;
-  }
-
-  /**
-   * Returns an array of items from the recent activities RSS feed.
-   */
-  public function getRecentActivities() {
-    $feed = new SimplePie();
-    $rss = $this->rss;
-    $feed->set_feed_url($rss);
-    $feed->init();
-    $feed->handle_content_type();
-    foreach ($feed->get_items() as $item) {
-      print $item->get_content();
-    }
   }
 
 }
